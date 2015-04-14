@@ -25,12 +25,10 @@ from __future__ import print_function
 
 import argparse
 import boto
+import os
 import sys
 import tarfile
 import unittest
-
-# Change this to whatever is convenient
-DEFAULT_BUCKET_NAME = ''
 
 def apply_filters(contents, filters):
     """Yield keys that pass all filters.
@@ -108,14 +106,23 @@ def loop(bucket, filters):
                 contents = new_contents
 
 
+def get_default_bucket_name():
+    """Return stripped contents of cwd/default_bucket"""
+    file_name = 'default_bucket'
+    if os.path.exists(file_name):
+        with open(file_name, 'r') as bucket_file:
+            return bucket_file.read().strip()
+
+
 def parse_args(argv):
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description='Utility for retrieving files from S3')
     bucket_help = 'S3 bucket name'
-    if DEFAULT_BUCKET_NAME != '':
-        bucket_help += ' (default={})'.format(DEFAULT_BUCKET_NAME)
-    parser.add_argument('-b', '--bucket', default=DEFAULT_BUCKET_NAME,
+    default_bucket_name = get_default_bucket_name()
+    if default_bucket_name is not None:
+        bucket_help += ' (default={})'.format(default_bucket_name)
+    parser.add_argument('-b', '--bucket', default=default_bucket_name,
                         metavar='bkt', help=bucket_help)
     parser.add_argument('filter', nargs='*',
                         help='only search keys containing these terms')
