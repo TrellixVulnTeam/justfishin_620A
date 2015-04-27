@@ -81,7 +81,7 @@ def download_key(key):
     # untar steps but it did not go well. With a small buffer size it
     # downloaded very very slowly, and with a large buffer size it ate
     # up all my RAM and destroyed everything.
-    with tarfile.open(key.name, 'r:bz2') as tar_file:
+    with tarfile.open(key.name, 'r:*') as tar_file:
         tar_file.extractall()
 
 
