@@ -128,7 +128,7 @@ def parse_args(argv):
                         help='only search keys containing these terms')
     args = parser.parse_args(argv)
     if args.bucket is None:
-        parser.error('invalid bucket name')
+        parser.error('invalid bucket name; create "default_bucket" file or pass "-b"')
     return args
 
 
