@@ -69,7 +69,7 @@ def bytes_to_mibibytes(num_bytes):
 def format_bytes(num_bytes):
     return '{:.2f}MiB'.format(bytes_to_mibibytes(num_bytes))
 
-
+#TODO: consider renaming to clarify that this method also extracts
 def download_key(key):
     print('downloading {}...'.format(format_bytes(key.size)))
     def progress(cur, size):
@@ -81,6 +81,7 @@ def download_key(key):
     # untar steps but it did not go well. With a small buffer size it
     # downloaded very very slowly, and with a large buffer size it ate
     # up all my RAM and destroyed everything.
+    print('extracting...')
     with tarfile.open(key.name, 'r:*') as tar_file:
         tar_file.extractall()
 
