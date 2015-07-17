@@ -86,11 +86,11 @@ def download_key(key):
         tar_file.extractall()
 
 
-def loop(bucket, filters):
+def loop(bucket, filters, content_limit):
     contents = list(apply_filters(bucket, filters))
     while True:
         print(format_bucket(bucket, contents))
-        if len(contents) <= 9:
+        if len(contents) <= content_limit:
             print(format_contents(contents))
 
         if len(contents) == 1:
@@ -125,6 +125,9 @@ def parse_args(argv):
         bucket_help += ' (default={})'.format(default_bucket_name)
     parser.add_argument('-b', '--bucket', default=default_bucket_name,
                         metavar='bkt', help=bucket_help)
+    parser.add_argument('-n','--number', default=9,
+                        metavar='number',
+                        help='limit of items to display to the user')
     parser.add_argument('filter', nargs='*',
                         help='only search keys containing these terms')
     args = parser.parse_args(argv)
@@ -137,13 +140,14 @@ def main(argv):
     args = parse_args(argv)
     bucket_name = args.bucket
     filters = args.filter
+    content_limit = args.number
 
     print('Connecting...')
 
     conn = boto.connect_s3()
 
     bucket = conn.get_bucket(bucket_name)
-    loop(bucket, filters)
+    loop(bucket, filters, content_limit)
 
 
 if __name__ == '__main__':
